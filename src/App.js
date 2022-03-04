@@ -20,6 +20,9 @@ const App=()=>{
     {id:4,title:'Script',surname:'Qodir'},
   ])
   const [select,setSelect]=useState("")
+  const [search,setSearch]=useState("")
+
+  
 
 
   const createPost=(newPost)=>{
@@ -32,15 +35,27 @@ const App=()=>{
   //  const [surname,setSurname]=useState('')
   //  const inputRef=useRef()
 
+  const sortPost=(sort)=>{
+    setSelect(sort)
+    setPosts([...posts].sort((a,b)=> a[sort].localeCompare(b[sort])))
+      console.log(sort)
+  }
   
     return (
       <div className='app w-50 mx-auto'>
 
         <PostForm createPost={createPost}/>  
-        <div className='d-flex flex-row-reverse my-2'>
+        <div className='d-flex justify-content-between my-2'>
+          <MyInput
+          className="form-control mx-1"
+          placeholder="Search..."
+          value={search}
+          onChange={e=>setSearch(e.target.value)}
+
+          />
           <MySelect 
             value={select}
-            onChange={sort=>setSelect(sort)}
+            onChange={sortPost}
             defaultValue="Sorted by"
             options={[
               {value:"title",name:"Programming"},
