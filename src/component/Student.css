@@ -1,0 +1,11 @@
+.btn{
+    background: rgba(0, 0, 0, 0.137);
+    border:1px solid rgb(252, 0, 0);
+    color:rgb(0, 0, 0);
+    font-weight: 700;
+    margin-right: 25px;
+}
+.container{
+    border: 3px solid red;
+    margin: 10px auto;
+}
