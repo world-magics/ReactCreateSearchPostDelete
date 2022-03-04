@@ -7,6 +7,7 @@ import TableList from './component/TableList'
 import MyButton from './component/UI/button/MyButton'
 import MyInput from './component/UI/input/MyInput'
 import { PostForm } from './component/PostForm'
+import MySelect from './component/UI/select/MySelect'
 // import Counter from './component/Counter';
 // import InputValue from './component/InputValue';
 // import ToogleBtn from './component/ToogleBtn';
@@ -18,6 +19,8 @@ const App=()=>{
     {id:3,title:'Java',surname:'Laylo'},
     {id:4,title:'Script',surname:'Qodir'},
   ])
+  const [select,setSelect]=useState("")
+
 
   const createPost=(newPost)=>{
     setPosts([...posts,newPost])
@@ -35,10 +38,15 @@ const App=()=>{
 
         <PostForm createPost={createPost}/>  
         <div className='d-flex flex-row-reverse my-2'>
-          <select className='form-select w-100'>
-            <option value="val">Sorted by Title</option>
-            <option value="val">Sorted by Surname</option>
-          </select>
+          <MySelect 
+            value={select}
+            onChange={sort=>setSelect(sort)}
+            defaultValue="Sorted by"
+            options={[
+              {value:"title",name:"Programming"},
+              {value:"surname",name:"Surname"}
+            ]}
+          />
         </div>
         
         {posts.length
