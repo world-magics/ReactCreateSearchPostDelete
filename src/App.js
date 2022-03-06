@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react'
+import React,{useState,useRef,useMemo} from 'react'
 import './../src/bootstrap.min.css'
 import '../src/style/styles.css'
 import TableItem from './component/TableItem'
@@ -8,6 +8,8 @@ import MyButton from './component/UI/button/MyButton'
 import MyInput from './component/UI/input/MyInput'
 import { PostForm } from './component/PostForm'
 import MySelect from './component/UI/select/MySelect'
+import FilterAndSearch from './component/FilterAndSearch'
+import MyModal from './component/UI/modal/MyModal'
 // import Counter from './component/Counter';
 // import InputValue from './component/InputValue';
 // import ToogleBtn from './component/ToogleBtn';
@@ -19,14 +21,32 @@ const App=()=>{
     {id:3,title:'Java',surname:'Laylo'},
     {id:4,title:'Script',surname:'Qodir'},
   ])
-  const [select,setSelect]=useState("")
-  const [search,setSearch]=useState("")
+  // const [select,setSelect]=useState("")
+  // const [search,setSearch]=useState("")
+
+  const [filter,setFilter]=useState({sort:"",query:""})
+  const [modal,setModal]=useState(false)
+
+  const  SortedPosts=useMemo(()=>{
+    console.log("first")
+    if(filter.sort){
+      return [...posts].sort((a,b)=> a[filter.sort].localeCompare(b[filter.sort]))
+    }
+    return posts
+  },[filter.sort,posts])
+
+  const sortedAndSearch=useMemo(()=>{
+        return SortedPosts.filter(post=>post.title.toLowerCase().includes(filter.query.toLowerCase()))
+  },[filter.query,SortedPosts])
+
+  // const sortedPosts=getSortedPosts()
 
   
 
 
   const createPost=(newPost)=>{
     setPosts([...posts,newPost])
+    setModal(false)
   }
   const removePost=(post)=>{
       setPosts(posts.filter(s=>s.id !==post.id))
@@ -35,41 +55,29 @@ const App=()=>{
   //  const [surname,setSurname]=useState('')
   //  const inputRef=useRef()
 
-  const sortPost=(sort)=>{
-    setSelect(sort)
-    setPosts([...posts].sort((a,b)=> a[sort].localeCompare(b[sort])))
-      console.log(sort)
-  }
+  // const sortPost=(sort)=>{
+  //   setSelect(sort)
+  //   // setPosts()
+  //   //   console.log(sort)
+  // }
   
     return (
       <div className='app w-50 mx-auto'>
-
-        <PostForm createPost={createPost}/>  
-        <div className='d-flex justify-content-between my-2'>
-          <MyInput
-          className="form-control mx-1"
-          placeholder="Search..."
-          value={search}
-          onChange={e=>setSearch(e.target.value)}
-
-          />
-          <MySelect 
-            value={select}
-            onChange={sortPost}
-            defaultValue="Sorted by"
-            options={[
-              {value:"title",name:"Programming"},
-              {value:"surname",name:"Surname"}
-            ]}
-          />
-        </div>
+        <MyButton 
+        onClick={()=>setModal(true)}
         
-        {posts.length
-        ?
-        <TableList remove={removePost} posts={posts}/>
-        :
-        <h5 className='text-center my-5'>You Should Some Post</h5>
-        }
+        >
+          Add Posts
+        </MyButton>
+        <MyModal modal={modal} setModal={setModal}>
+        <PostForm  createPost={createPost}/>  
+        </MyModal>
+
+        <FilterAndSearch filter={filter} setFilter={setFilter}/>
+        
+      
+        <TableList remove={removePost} posts={sortedAndSearch}/>
+      
       </div>
     )
 }
