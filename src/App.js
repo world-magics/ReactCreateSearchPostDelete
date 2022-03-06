@@ -10,6 +10,7 @@ import { PostForm } from './component/PostForm'
 import MySelect from './component/UI/select/MySelect'
 import FilterAndSearch from './component/FilterAndSearch'
 import MyModal from './component/UI/modal/MyModal'
+import { usePosts } from './hooks/useCreatePost'
 // import Counter from './component/Counter';
 // import InputValue from './component/InputValue';
 // import ToogleBtn from './component/ToogleBtn';
@@ -26,18 +27,18 @@ const App=()=>{
 
   const [filter,setFilter]=useState({sort:"",query:""})
   const [modal,setModal]=useState(false)
+  const sortedAndSearchPosts=usePosts(posts,filter.sort,filter.query)
+  // const  SortedPosts=useMemo(()=>{
+  //   console.log("first")
+  //   if(filter.sort){
+  //     return [...posts].sort((a,b)=> a[filter.sort].localeCompare(b[filter.sort]))
+  //   }
+  //   return posts
+  // },[filter.sort,posts])
 
-  const  SortedPosts=useMemo(()=>{
-    console.log("first")
-    if(filter.sort){
-      return [...posts].sort((a,b)=> a[filter.sort].localeCompare(b[filter.sort]))
-    }
-    return posts
-  },[filter.sort,posts])
-
-  const sortedAndSearch=useMemo(()=>{
-        return SortedPosts.filter(post=>post.title.toLowerCase().includes(filter.query.toLowerCase()))
-  },[filter.query,SortedPosts])
+  // const sortedAndSearch=useMemo(()=>{
+  //       return SortedPosts.filter(post=>post.title.toLowerCase().includes(filter.query.toLowerCase()))
+  // },[filter.query,SortedPosts])
 
   // const sortedPosts=getSortedPosts()
 
@@ -76,7 +77,7 @@ const App=()=>{
         <FilterAndSearch filter={filter} setFilter={setFilter}/>
         
       
-        <TableList remove={removePost} posts={sortedAndSearch}/>
+        <TableList remove={removePost} posts={sortedAndSearchPosts}/>
       
       </div>
     )
